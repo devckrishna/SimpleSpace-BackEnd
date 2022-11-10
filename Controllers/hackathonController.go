@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -41,6 +42,90 @@ func CreateHackathon() gin.HandlerFunc {
 			CreatedAt:        time.Now(),
 			Participants:     []string{},
 			Mentors:          []string{},
+			Description:      hackathon.Description,
+			MaxTeamSize:      hackathon.MaxTeamSize,
+			SocialMediaLinks: hackathon.SocialMediaLinks,
+			Submissions:      []string{},
+			Creater:          hackathon.Creater,
+		}
+		result, err := hackathonCollection.InsertOne(ctx, newHackathon)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, result)
+	}
+}
+
+func AddParticipant() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var hackathon models.Hackathon
+		defer cancel()
+
+		id := c.Param("id")
+		hackathonId, _ := primitive.ObjectIDFromHex(id)
+		userId := c.Param("user_id")
+
+		err := hackathonCollection.FindOne(ctx, bson.M{"_id": hackathonId}).Decode(&hackathon)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		res, err := hackathonCollection.DeleteOne(ctx, bson.M{"_id": hackathonId})
+		fmt.Println(res)
+
+		newHackathon := models.Hackathon{
+			ID:               hackathon.ID,
+			Theme:            hackathon.Theme,
+			Title:            hackathon.Title,
+			StartDate:        hackathon.StartDate,
+			EndDate:          hackathon.EndDate,
+			CreatedAt:        time.Now(),
+			Participants:     append(hackathon.Participants, userId),
+			Mentors:          []string{},
+			Description:      hackathon.Description,
+			MaxTeamSize:      hackathon.MaxTeamSize,
+			SocialMediaLinks: hackathon.SocialMediaLinks,
+			Submissions:      []string{},
+			Creater:          hackathon.Creater,
+		}
+		result, err := hackathonCollection.InsertOne(ctx, newHackathon)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, result)
+	}
+}
+
+func AddMentor() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var hackathon models.Hackathon
+		defer cancel()
+
+		id := c.Param("id")
+		hackathonId, _ := primitive.ObjectIDFromHex(id)
+		userId := c.Param("user_id")
+
+		err := hackathonCollection.FindOne(ctx, bson.M{"_id": hackathonId}).Decode(&hackathon)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		res, err := hackathonCollection.DeleteOne(ctx, bson.M{"_id": hackathonId})
+		fmt.Println(res)
+
+		newHackathon := models.Hackathon{
+			ID:               hackathon.ID,
+			Theme:            hackathon.Theme,
+			Title:            hackathon.Title,
+			StartDate:        hackathon.StartDate,
+			EndDate:          hackathon.EndDate,
+			CreatedAt:        time.Now(),
+			Participants:     hackathon.Participants,
+			Mentors:          append(hackathon.Mentors, userId),
 			Description:      hackathon.Description,
 			MaxTeamSize:      hackathon.MaxTeamSize,
 			SocialMediaLinks: hackathon.SocialMediaLinks,
