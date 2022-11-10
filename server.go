@@ -18,9 +18,10 @@ func main() {
 	}
 
 	server := gin.New()
+	server.Use(helpers.CORSMiddleware())
 	server.Use(gin.Logger())
 	routes.HackathonRoute(server)
-	server.Use(helpers.CORSMiddleware())
+	routes.TeamRoute(server)
 	routes.AuthRoutes(server)
 	routes.UserRoutes(server)
 
