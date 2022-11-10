@@ -6,8 +6,8 @@ import (
 )
 
 func HackathonRoute(ctx *gin.Engine) {
-	ctx.POST("hackathon/create", controller.CreateOneHackathon())
-	ctx.GET("hackathons",controller.GetAllHackathons())
-	ctx.GET("hackathons/:hackathon_id",controller.GetAHackathon())
-	ctx.PUT("hackathons/:hackathon_id",controller.UpdateHackathon())
+	ctx.POST("/hackathon", controller.CreateHackathon())
+	ctx.GET("/hackathon", controller.GetHackathons())
+	ctx.GET("/hackathon/:id", controller.GetHackathonById())
+	ctx.DELETE("/hackathon/:id", controller.DeleteHackaThon())
 }

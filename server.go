@@ -19,13 +19,11 @@ func main() {
 
 	server := gin.New()
 	server.Use(gin.Logger())
-  routes.HackathonRoute(server)
-
+	routes.HackathonRoute(server)
 	server.Use(helpers.CORSMiddleware())
 	routes.AuthRoutes(server)
 	routes.UserRoutes(server)
-    
-	
+
 	server.GET("/api", func(ctx *gin.Context) {
 		ctx.JSON(200, "hye!!!")
 	})
