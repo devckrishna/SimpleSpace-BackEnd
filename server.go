@@ -5,6 +5,7 @@ import (
 	"os"
 
 	database "github.com/devckrishna/SimpleSpace/Database"
+	helpers "github.com/devckrishna/SimpleSpace/Helpers"
 	routes "github.com/devckrishna/SimpleSpace/Routes"
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +19,9 @@ func main() {
 
 	server := gin.New()
 	server.Use(gin.Logger())
-    routes.HackathonRoute(server)
+  routes.HackathonRoute(server)
+
+	server.Use(helpers.CORSMiddleware())
 	routes.AuthRoutes(server)
 	routes.UserRoutes(server)
     
