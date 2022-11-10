@@ -22,6 +22,7 @@ func main() {
 	server.Use(gin.Logger())
 	routes.HackathonRoute(server)
 	routes.TeamRoute(server)
+	routes.SubmissionRoute(server)
 	routes.AuthRoutes(server)
 	routes.UserRoutes(server)
 
